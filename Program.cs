@@ -23,7 +23,7 @@ namespace Cajero_Automatico
                         IniciarSesion();
                         break;
                     case "2":
-                        RegistrarUsuarioEsqueleto();
+                        RegistrarUsuario();
                         break;
                     case "3":
                         Console.WriteLine("\n[Saliendo del sistema]");
@@ -73,11 +73,31 @@ namespace Cajero_Automatico
                 Console.WriteLine("\n❌ Usuario o contraseña incorrectos (o no hay usuarios registrados).");
         }
 
-        static void RegistrarUsuarioEsqueleto()
+        static void RegistrarUsuario()
         {
             Console.Clear();
-            Console.WriteLine("=== Registrar usuario (esqueleto) ===");
-            Console.WriteLine("\n➡️  Esto es sólo el esqueleto del menú. Implementaremos el registro real en la rama 'feature/registro'.");
+            Console.WriteLine("=== Registrar nuevo usuario ===");
+            Console.Write("Ingrese nombre de usuario: ");
+            string usuario = Console.ReadLine()?.Trim();
+
+            Console.Write("Ingrese contraseña: ");
+            string contrasena = Console.ReadLine();
+
+            Console.Write("Confirme contraseña: ");
+            string confirm = Console.ReadLine();
+
+            if (contrasena != confirm)
+            {
+                Console.WriteLine("\n❌ Las contraseñas no coinciden.");
+                return;
+            }
+
+            bool registrado = admin.RegistrarUsuario(usuario, contrasena);
+
+            if (registrado)
+                Console.WriteLine("\n✅ Usuario registrado con éxito.");
+            else
+                Console.WriteLine("\n❌ El nombre de usuario ya existe o los datos son inválidos.");
         }
     }
 }

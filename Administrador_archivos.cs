@@ -28,8 +28,15 @@ namespace Cajero_Automatico
         // Este método lo implementaremos en la rama "feature/registro"
         public bool RegistrarUsuario(string nombreUsuario, string contrasena)
         {
-            // aún vacío: se implementará después
-            throw new NotImplementedException("RegistrarUsuario aún no implementado");
+            if (string.IsNullOrWhiteSpace(nombreUsuario) || string.IsNullOrWhiteSpace(contrasena))
+                return false;
+
+            // Revisar si ya existe un usuario con ese nombre
+            if (usuarios.Any(u => u.NombreUsuario.Equals(nombreUsuario, StringComparison.OrdinalIgnoreCase)))
+                return false;
+
+            usuarios.Add(new Usuario(nombreUsuario.Trim(), contrasena));
+            return true;
         }
     }
 }
