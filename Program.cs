@@ -6,54 +6,50 @@ using System.Threading.Tasks;
 
 namespace Cajero_Automatico
 {
-    internal class Program
+    class Program
     {
+        static Administrador_archivos admin = new Administrador_archivos();
+
         static void Main(string[] args)
         {
             bool salir = false;
 
-            while (!salir) 
+            while (!salir)
             {
-                MostrarMenu();
-                string opcion = Console.ReadLine()?.Trim();
+                Console.Clear();
+                Console.WriteLine(" === CAJERO AUTOMATICO === ");
+                Console.WriteLine("1. Iniciar sesión");
+                Console.WriteLine("2. Registrar usuario");
+                Console.WriteLine("3. Salir");
+                Console.Write("\nSeleccione una opción: ");
+
+                string opcion = Console.ReadLine();
 
                 switch (opcion)
                 {
                     case "1":
                         IniciarSesion();
+                        Console.ReadKey();
                         break;
+
                     case "2":
                         RegistrarUsuario();
+                        Console.ReadKey();
                         break;
+
                     case "3":
                         Console.WriteLine("\n[Saliendo del sistema]");
                         salir = true;
+                        Console.ReadKey();
                         break;
+
                     default:
                         Console.WriteLine("\n❌ Opción no válida.");
+                        Console.ReadKey();
                         break;
-                }
-
-                if (!salir)
-                {
-                    Console.WriteLine("\nPresione una tecla para continuar...");
-                    Console.ReadKey();
                 }
             }
         }
-        static void MostrarMenu()
-        {
-            Console.Clear();
-            Console.WriteLine(" === CAJERO AUTOMATICO === ");
-            Console.WriteLine("1. Iniciar sesión");
-            Console.WriteLine("2. Registrar usuario");
-            Console.WriteLine("3. Salir");
-            Console.Write("\nSeleccione una opción: ");
-        }
-
-        // ESQUELETO: aquí NO implementamos la lógica real aún.
-        // En la siguiente rama implementaremos la clase Administrador_archivos y la lógica real.
-        static Administrador_archivos admin = new Administrador_archivos();
 
         static void IniciarSesion()
         {
@@ -68,9 +64,21 @@ namespace Cajero_Automatico
             bool acceso = admin.IniciarSesion(usuario, contrasena);
 
             if (acceso)
-                Console.WriteLine("\n✅ Bienvenido, inicio de sesión exitoso.");
+            {
+                Usuario usuarioObj = admin.ObtenerUsuario(usuario);
+                if (usuarioObj != null)
+                {
+                    Console.WriteLine($"\n✅ Bienvenido, {usuario}. Tu saldo actual es: {usuarioObj.Saldo:C}");
+                }
+                else
+                {
+                    Console.WriteLine("\n❌ Error interno: usuario no encontrado.");
+                }
+            }
             else
-                Console.WriteLine("\n❌ Usuario o contraseña incorrectos (o no hay usuarios registrados).");
+            {
+                Console.WriteLine("\n❌ Usuario o contraseña incorrectos.");
+            }
         }
 
         static void RegistrarUsuario()
@@ -95,7 +103,7 @@ namespace Cajero_Automatico
             bool registrado = admin.RegistrarUsuario(usuario, contrasena);
 
             if (registrado)
-                Console.WriteLine("\n✅ Usuario registrado con éxito.");
+                Console.WriteLine("\n✅ Usuario registrado con éxito. Saldo inicial: $0");
             else
                 Console.WriteLine("\n❌ El nombre de usuario ya existe o los datos son inválidos.");
         }
