@@ -115,6 +115,7 @@ namespace Cajero_Automatico
             {
                 usuario.Saldo += monto;
                 admin.ActualizarSaldo(usuario.NombreUsuario, usuario.Saldo);
+                admin.GuardarMovimiento(usuario.NombreUsuario, "Deposito", monto, usuario.Saldo);
                 Console.WriteLine($"\n✅ Depósito exitoso. Nuevo saldo: {usuario.Saldo:C}");
             }
             else
@@ -133,6 +134,7 @@ namespace Cajero_Automatico
                 {
                     usuario.Saldo -= monto;
                     admin.ActualizarSaldo(usuario.NombreUsuario, usuario.Saldo);
+                    admin.GuardarMovimiento(usuario.NombreUsuario, "Retiro", monto, usuario.Saldo);
                     Console.WriteLine($"\n✅ Retiro exitoso. Nuevo saldo: {usuario.Saldo:C}");
                 }
                 else
@@ -178,6 +180,8 @@ namespace Cajero_Automatico
                 Console.WriteLine("3. Retirar dinero");
                 Console.WriteLine("4. Cambiar contraseña");
                 Console.WriteLine("5. Cerrar sesión");
+                Console.WriteLine("6. Ver historial de movimientos");
+
                 Console.Write("\nSeleccione una opción: ");
 
                 string opcion = Console.ReadLine();
@@ -205,6 +209,10 @@ namespace Cajero_Automatico
                         Console.WriteLine("\nCerrando sesión...");
                         salir = true;
                         break;
+                    case "6":
+                        MostrarHistorial(usuario);
+                        break;
+
 
                     default:
                         Console.WriteLine("\n❌ Opción no válida.");
@@ -212,6 +220,24 @@ namespace Cajero_Automatico
                 }
             }
         }
+
+        static void MostrarHistorial(Usuario usuario)
+        {
+            var historial = admin.ObtenerHistorial(usuario.NombreUsuario);
+
+            Console.WriteLine("\n=== Historial de Movimientos ===");
+            if (historial.Count == 0)
+            {
+                Console.WriteLine("No hay movimientos registrados.");
+            }
+            else
+            {
+                foreach (var linea in historial)
+                    Console.WriteLine(linea);
+            }
+            Console.ReadKey();
+        }
+
 
 
     }

@@ -11,12 +11,16 @@ namespace Cajero_Automatico
     {
         private List<Usuario> usuarios;
         private readonly string rutaArchivo;
+        private readonly string rutaMovimientos;
 
         public Administrador_archivos()
         {
             rutaArchivo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "usuarios.txt");
+            rutaMovimientos = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "movimientos.txt");
             CargarUsuarios();
         }
+
+
 
         private void CargarUsuarios()
         {
@@ -88,6 +92,7 @@ namespace Cajero_Automatico
             }
 
         }
+
         public void ActualizarContrasena(string nombreUsuario, string nuevaContrasena)
         {
             var usuario = ObtenerUsuario(nombreUsuario);
@@ -97,6 +102,23 @@ namespace Cajero_Automatico
                 GuardarUsuarios();
             }
         }
+
+        public void GuardarMovimiento(string usuario, string tipo, decimal valor, decimal saldoFinal)
+        {
+            string linea = $"{usuario};{DateTime.Now};{tipo};{valor};{saldoFinal}";
+            File.AppendAllLines(rutaMovimientos, new[] { linea });
+        }
+
+        public List<string> ObtenerHistorial(string usuario)
+        {
+            if (!File.Exists(rutaMovimientos))
+                return new List<string>();
+
+            return File.ReadAllLines(rutaMovimientos)
+                .Where(linea => linea.StartsWith(usuario + ";"))
+                .ToList();
+        }
+
 
     }
 }
