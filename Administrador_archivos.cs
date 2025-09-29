@@ -86,6 +86,17 @@ namespace Cajero_Automatico
                 usuario.Saldo = nuevoSaldo;
                 GuardarUsuarios();
             }
+
         }
+        public void ActualizarContrasena(string nombreUsuario, string nuevaContrasena)
+        {
+            var usuario = ObtenerUsuario(nombreUsuario);
+            if (usuario != null)
+            {
+                usuario.Contrasena = nuevaContrasena;
+                GuardarUsuarios();
+            }
+        }
+
     }
 }

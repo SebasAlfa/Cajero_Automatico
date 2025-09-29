@@ -68,7 +68,7 @@ namespace Cajero_Automatico
                 Usuario usuarioObj = admin.ObtenerUsuario(usuario);
                 if (usuarioObj != null)
                 {
-                    Console.WriteLine($"\n✅ Bienvenido, {usuario}. Tu saldo actual es: {usuarioObj.Saldo:C}");
+                    MenuUsuario(usuarioObj); // ⬅ Aquí llamamos al menú del usuario autenticado
                 }
                 else
                 {
@@ -107,5 +107,112 @@ namespace Cajero_Automatico
             else
                 Console.WriteLine("\n❌ El nombre de usuario ya existe o los datos son inválidos.");
         }
+
+        static void Depositar(Usuario usuario)
+        {
+            Console.Write("\nIngrese el monto a depositar: ");
+            if (decimal.TryParse(Console.ReadLine(), out decimal monto) && monto > 0)
+            {
+                usuario.Saldo += monto;
+                admin.ActualizarSaldo(usuario.NombreUsuario, usuario.Saldo);
+                Console.WriteLine($"\n✅ Depósito exitoso. Nuevo saldo: {usuario.Saldo:C}");
+            }
+            else
+            {
+                Console.WriteLine("\n❌ Monto inválido.");
+            }
+            Console.ReadKey();
+        }
+
+        static void Retirar(Usuario usuario)
+        {
+            Console.Write("\nIngrese el monto a retirar: ");
+            if (decimal.TryParse(Console.ReadLine(), out decimal monto) && monto > 0)
+            {
+                if (monto <= usuario.Saldo)
+                {
+                    usuario.Saldo -= monto;
+                    admin.ActualizarSaldo(usuario.NombreUsuario, usuario.Saldo);
+                    Console.WriteLine($"\n✅ Retiro exitoso. Nuevo saldo: {usuario.Saldo:C}");
+                }
+                else
+                {
+                    Console.WriteLine("\n❌ Saldo insuficiente.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("\n❌ Monto inválido.");
+            }
+            Console.ReadKey();
+        }
+
+        static void CambiarContrasena(Usuario usuario)
+        {
+            Console.Write("\nIngrese la nueva contraseña: ");
+            string nueva = Console.ReadLine();
+
+            if (!string.IsNullOrWhiteSpace(nueva))
+            {
+                usuario.Contrasena = nueva;
+                admin.ActualizarContrasena(usuario.NombreUsuario, nueva);
+                Console.WriteLine("\n✅ Contraseña cambiada exitosamente.");
+            }
+            else
+            {
+                Console.WriteLine("\n❌ Contraseña inválida.");
+            }
+            Console.ReadKey();
+        }
+
+        static void MenuUsuario(Usuario usuario)
+        {
+            bool salir = false;
+
+            while (!salir)
+            {
+                Console.Clear();
+                Console.WriteLine($"=== Bienvenido {usuario.NombreUsuario} ===");
+                Console.WriteLine("1. Consultar saldo");
+                Console.WriteLine("2. Depositar dinero");
+                Console.WriteLine("3. Retirar dinero");
+                Console.WriteLine("4. Cambiar contraseña");
+                Console.WriteLine("5. Cerrar sesión");
+                Console.Write("\nSeleccione una opción: ");
+
+                string opcion = Console.ReadLine();
+
+                switch (opcion)
+                {
+                    case "1":
+                        Console.WriteLine($"\nTu saldo actual es: {usuario.Saldo:C}");
+                        Console.ReadKey();
+                        break;
+
+                    case "2":
+                        Depositar(usuario);
+                        break;
+
+                    case "3":
+                        Retirar(usuario);
+                        break;
+
+                    case "4":
+                        CambiarContrasena(usuario);
+                        break;
+
+                    case "5":
+                        Console.WriteLine("\nCerrando sesión...");
+                        salir = true;
+                        break;
+
+                    default:
+                        Console.WriteLine("\n❌ Opción no válida.");
+                        break;
+                }
+            }
+        }
+
+
     }
 }
