@@ -20,7 +20,7 @@ namespace Cajero_Automatico
                 switch (opcion)
                 {
                     case "1":
-                        IniciarSesionEsqueleto();
+                        IniciarSesion();
                         break;
                     case "2":
                         RegistrarUsuarioEsqueleto();
@@ -53,11 +53,24 @@ namespace Cajero_Automatico
 
         // ESQUELETO: aquí NO implementamos la lógica real aún.
         // En la siguiente rama implementaremos la clase Administrador_archivos y la lógica real.
-        static void IniciarSesionEsqueleto()
+        static Administrador_archivos admin = new Administrador_archivos();
+
+        static void IniciarSesion()
         {
             Console.Clear();
-            Console.WriteLine("=== Iniciar sesión (esqueleto) ===");
-            Console.WriteLine("\n➡️  Esto es sólo el esqueleto del menú. Implementaremos la lógica real en la rama 'feature/login'.");
+            Console.WriteLine("=== Iniciar sesión ===");
+            Console.Write("Usuario: ");
+            string usuario = Console.ReadLine()?.Trim();
+
+            Console.Write("Contraseña: ");
+            string contrasena = Console.ReadLine();
+
+            bool acceso = admin.IniciarSesion(usuario, contrasena);
+
+            if (acceso)
+                Console.WriteLine("\n✅ Bienvenido, inicio de sesión exitoso.");
+            else
+                Console.WriteLine("\n❌ Usuario o contraseña incorrectos (o no hay usuarios registrados).");
         }
 
         static void RegistrarUsuarioEsqueleto()
